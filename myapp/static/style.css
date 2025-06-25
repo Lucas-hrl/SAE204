@@ -1,0 +1,385 @@
+/* Reset et styles de base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #1a202c;
+    background: #f7fafc;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Conteneur principal */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+/* En-tête avec titre */
+h1 {
+    color: #2d3748;
+    margin: 0;
+    font-size: 1.875rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 32px 0 24px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    position: relative;
+}
+
+h1:not(:first-child) {
+    background: none;
+    color: #2d3748;
+    padding: 40px 40px 24px 40px;
+    font-size: 1.5rem;
+    text-align: left;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 0;
+}
+
+/* Formulaire de filtrage */
+form {
+    background: #f8fafc;
+    padding: 32px 40px;
+    border-bottom: 1px solid #e2e8f0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 24px;
+    align-items: end;
+}
+
+/* Labels */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #4a5568;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Champs de saisie */
+select, input[type="date"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+select:focus, input[type="date"]:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+select:hover, input[type="date"]:hover {
+    border-color: #9ca3af;
+}
+
+/* Boutons */
+.button, button {
+    background: #667eea;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    min-height: 44px;
+}
+
+.button:hover, button:hover {
+    background: #5a67d8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.button:active, button:active {
+    transform: translateY(0);
+}
+
+/* Bouton de modification */
+.edit-button {
+    background: #38b2ac;
+    padding: 8px 16px;
+    font-size: 12px;
+    margin-right: 8px;
+    min-height: 32px;
+}
+
+.edit-button:hover {
+    background: #319795;
+    box-shadow: 0 4px 12px rgba(56, 178, 172, 0.3);
+}
+
+/* Bouton de suppression */
+.delete-button {
+    background: #e53e3e;
+    padding: 8px 16px;
+    font-size: 12px;
+    min-height: 32px;
+}
+
+.delete-button:hover {
+    background: #c53030;
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+}
+
+/* Liste des mesures */
+ul {
+    list-style: none;
+    padding: 0 40px 40px 40px;
+}
+
+li {
+    background: white;
+    margin-bottom: 12px;
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    gap: 20px;
+}
+
+li:hover {
+    border-color: #cbd5e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+}
+
+li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #667eea;
+    border-radius: 2px 0 0 2px;
+}
+
+/* Étiquettes et valeurs dans les mesures */
+li span:nth-child(odd):not(.value) {
+    font-weight: 500;
+    color: #718096;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+li span.value {
+    color: #2d3748;
+    font-size: 1rem;
+    font-weight: 600;
+    background: #f7fafc;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Contenu principal des mesures */
+.mesure-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    align-items: center;
+    flex: 1;
+}
+
+/* Conteneur des boutons d'action */
+.mesure-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Section Actions principales */
+.container > a.button {
+    margin: 0 40px 40px 40px;
+    margin-right: 16px;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    min-height: 48px;
+}
+
+.container > a.button:first-of-type {
+    background: #38b2ac;
+}
+
+.container > a.button:first-of-type:hover {
+    background: #319795;
+    box-shadow: 0 4px 12px rgba(56, 178, 172, 0.3);
+}
+
+.container > a.button:last-of-type {
+    background: #805ad5;
+}
+
+.container > a.button:last-of-type:hover {
+    background: #6b46c1;
+    box-shadow: 0 4px 12px rgba(128, 90, 213, 0.3);
+}
+
+/* Styles responsives */
+@media (max-width: 1200px) {
+    li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .mesure-info {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .mesure-actions {
+        align-self: flex-end;
+    }
+
+    li span:nth-child(odd):not(.value) {
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    li span.value {
+        display: inline-block;
+        margin-right: 16px;
+        margin-bottom: 8px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 12px;
+    }
+
+    .container {
+        border-radius: 12px;
+    }
+
+    form {
+        grid-template-columns: 1fr;
+        padding: 24px;
+        gap: 20px;
+    }
+
+    ul {
+        padding: 0 24px 24px 24px;
+    }
+
+    li {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+        padding: 24px 0 20px 0;
+    }
+
+    h1:not(:first-child) {
+        padding: 32px 24px 20px 24px;
+        font-size: 1.25rem;
+    }
+
+    .container > a.button {
+        margin: 0 24px 32px 24px;
+        display: block;
+        text-align: center;
+        margin-bottom: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 8px;
+    }
+
+    form {
+        padding: 20px;
+    }
+
+    ul {
+        padding: 0 20px 20px 20px;
+    }
+
+    li {
+        padding: 16px;
+    }
+
+    h1 {
+        font-size: 1.25rem;
+        padding: 20px 0 16px 0;
+    }
+
+    h1:not(:first-child) {
+        padding: 24px 20px 16px 20px;
+        font-size: 1.125rem;
+    }
+
+    .container > a.button {
+        margin: 0 20px 24px 20px;
+        padding: 14px 24px;
+        font-size: 14px;
+    }
+}
+
+/* États de focus améliorés pour l'accessibilité */
+.button:focus, button:focus, select:focus, input:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* Animation subtile au chargement */
+.container {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Amélioration de la lisibilité */
+li span.value {
+    font-feature-settings: 'tnum';
+}
+
+/* Style pour les champs vides */
+select option:first-child {
+    color: #9ca3af;
+}

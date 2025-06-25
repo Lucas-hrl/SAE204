@@ -4,7 +4,7 @@
     {% load static %}
     {% load l10n %}
     <title>Affichage des mesures</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -44,38 +44,9 @@
             </li>
         {% endfor %}
         </ul>
-
-
-
-
         <h1>Actions</h1>
         <a href="{% url 'graphique' %}" class="button">Afficher le graphique</a>
         <a href="{% url 'export_csv' %}" class="button">Télécharger les données en CSV</a>
     </div>
-
-    <script>
-        setTimeout(function(){
-            window.location.reload(1);
-        }, 30000);
-
-        $(document).ready(function() {
-            $('.inline-form').on('submit', function(event) {
-                event.preventDefault();
-                var $form = $(this);
-                $.ajax({
-                    type: $form.attr('method'),
-                    url: $form.attr('action'),
-                    data: $form.serialize(),
-                    success: function(response) {
-                        if (response.success) {
-                            alert('Capteur mis à jour avec succès.');
-                        } else {
-                            alert('Échec de la mise à jour du capteur.');
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>

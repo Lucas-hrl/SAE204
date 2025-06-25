@@ -1,15 +1,13 @@
-import urllib.parse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import Capteur, Mesure
 from django.utils.dateparse import parse_date
 import csv
 from django.utils.timezone import localtime
-from datetime import datetime
 from .forms import CapteurForm
 import plotly.graph_objects as go
 from collections import defaultdict
-from datetime import datetime, timedelta
+
 
 
 def index(request):
