@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    {% load l10n %}
+    <title>Affichage des mesures</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Liste des Capteurs</h1>
+        <form method="get" action="{% url 'index' %}">
+            <label for="capteur_id">ID du Capteur :</label>
+            <select id="capteur_id" name="capteur_id">
+                <option value="">Tous les capteurs</option>
+                {% for capteur in capteurs %}
+                    <option value="{{ capteur.id_capteur }}" {% if capteur.id_capteur|stringformat:"s" == request.GET.capteur_id %}selected{% endif %}>{{ capteur.nom_capteur }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="date_start">Date de début :</label>
+            <input type="date" id="date_start" name="date_start" value="{{ request.GET.date_start }}">
+
+            <label for="date_end">Date de fin :</label>
+            <input type="date" id="date_end" name="date_end" value="{{ request.GET.date_end }}">
+
+            <button type="submit">Filtrer</button>
+        </form>
+
+        <h1>Liste des Mesures</h1>
+        <ul>
+        {% for mesure in mesures %}
+            <li>
+                <span>Capteur :</span>
+                <span>{{ mesure.id_capteur.nom_capteur }}</span>
+                <a href="{% url 'modifier_capteur' mesure.id_capteur.id_capteur %}" class="button edit-button">Modifier</a>
+                <span>Température :</span> <span class="value">{{ mesure.temperature|floatformat:2 }} °C</span>
+                <span>Date :</span> <span class="value">{{ mesure.date_heure|localize }}</span>
+                <span>Emplacement :</span> <span class="value">{{ mesure.id_capteur.emplacement|default:"Non défini" }}</span>
+                <span>Lieu :</span> <span class="value">{{ mesure.id_capteur.piece }}</span>
+
+                <a href="{% url 'delete_mesure' mesure.id_mesure %}" class="button delete-button">Supprimer</a>
+            </li>
+        {% endfor %}
+        </ul>
+
+
+
+
+        <h1>Actions</h1>
+        <a href="{% url 'graphique' %}" class="button">Afficher le graphique</a>
+        <a href="{% url 'export_csv' %}" class="button">Télécharger les données en CSV</a>
+    </div>
+
+    <script>
+        setTimeout(function(){
+            window.location.reload(1);
+        }, 30000);
+
+        $(document).ready(function() {
+            $('.inline-form').on('submit', function(event) {
+                event.preventDefault();
+                var $form = $(this);
+                $.ajax({
+                    type: $form.attr('method'),
+                    url: $form.attr('action'),
+                    data: $form.serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Capteur mis à jour avec succès.');
+                        } else {
+                            alert('Échec de la mise à jour du capteur.');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
