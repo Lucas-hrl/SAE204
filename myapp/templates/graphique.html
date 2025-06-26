@@ -1,64 +1,34 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Graphique des Températures</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1000px;
-            margin: auto;
-            background-color: #fff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        .graph {
-            margin-top: 30px;
-        }
-
-        .button {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 16px;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}?v=2">
 </head>
 <body>
     <div class="container">
-        <h1>Graphique des Températures</h1>
-        <div class="graph">
-            {{ graph|safe }}
-        </div>
-        <div class="text-center">
-            <a href="{% url 'index' %}" class="button">← Retour à l'accueil</a>
-        </div>
+        <header class="page-header">
+            <h1 class="main-title">Graphique des Températures</h1>
+        </header>
+        
+        <section>
+            <h2 class="section-title">Visualisation des Données</h2>
+            <div class="graph">
+                {{ graph|safe }}
+            </div>
+        </section>
+        
+        <section>
+            <div class="nav-grid">
+                <a href="{% url 'index' %}" class="btn btn-secondary">
+                    <span class="btn-text">← Retour à l'accueil</span>
+                </a>
+            </div>
+        </section>
     </div>
 </body>
 </html>
+

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Capteurs</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}?v=2">
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1 class="main-title">Gestion des Capteurs</h1>
+        </header>
+
+        <section class="sensors-section">
+            <h2 class="section-title">Liste des Capteurs Enregistrés</h2>
+            
+            <div class="sensors-stats">
+                <div class="stat-card">
+                    <div class="stat-label">Total Capteurs</div>
+                    <div class="stat-value">{{ capteurs|length }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Capteurs Actifs</div>
+                    <div class="stat-value">{{ capteurs|length }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Emplacements</div>
+                    <div class="stat-value">
+                        {% regroup capteurs by piece as pieces_list %}
+                        {{ pieces_list|length }}
+                    </div>
+                </div>
+            </div>
+
+            {% if capteurs %}
+                <div class="sensors-grid">
+                    {% for capteur in capteurs %}
+                        <div class="sensor-card">
+                            <div class="sensor-header">
+                                <div class="sensor-id">ID: {{ capteur.id_capteur }}</div>
+                                <div class="sensor-status active"></div>
+                            </div>
+                            
+                            <div class="sensor-info">
+                                <h3 class="sensor-name">{{ capteur.nom_capteur }}</h3>
+                                
+                                <div class="sensor-details">
+                                    <div class="detail-group">
+                                        <span class="detail-label">Emplacement</span>
+                                        <span class="detail-value">{{ capteur.emplacement|default:"Non défini" }}</span>
+                                    </div>
+                                    <div class="detail-group">
+                                        <span class="detail-label">Pièce</span>
+                                        <span class="detail-value">{{ capteur.piece|default:"--" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="sensor-actions">
+                                <a href="{% url 'modifier_capteur' capteur.id_capteur %}" 
+                                   class="btn btn-secondary btn-small">
+                                    <span class="btn-text">Modifier</span>
+                                </a>
+                                <button class="btn btn-danger btn-small" 
+                                        onclick="confirmDelete('{{ capteur.nom_capteur }}', {{ capteur.id_capteur }})">
+                                    <span class="btn-text">Supprimer</span>
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <h3 class="empty-title">Aucun capteur configuré</h3>
+                    <p class="empty-message">Commencez par ajouter votre premier capteur pour collecter des données.</p>
+                    <a href="#" class="btn btn-primary">
+                        <span class="btn-text">Ajouter un capteur</span>
+                    </a>
+                </div>
+            {% endif %}
+        </section>
+
+        <section class="actions-section">
+            <h2 class="section-title">Actions Rapides</h2>
+            <div class="actions-grid">
+                <a href="{% url 'index' %}" class="btn btn-primary">
+                    <span class="btn-text">Tableau de Bord</span>
+                </a>
+                <a href="{% url 'graphique' %}" class="btn btn-secondary">
+                    <span class="btn-text">Voir les Graphiques</span>
+                </a>
+                <a href="{% url 'export_csv' %}" class="btn btn-secondary">
+                    <span class="btn-text">Exporter les Données</span>
+                </a>
+            </div>
+        </section>
+    </div>
+

@@ -1,21 +1,95 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifier un Capteur</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 </head>
 <body>
+    <div class="container">
+        <header class="page-header">
+            <h1 class="main-title">Modifier le Capteur</h1>
+        </header>
 
-<h2>Modifier le Capteur</h2>
+        <section class="form-section">
+            <h2 class="section-title">Informations du Capteur</h2>
+            <form method="post" class="edit-form">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}" class="form-label">
+                            {{ field.label }}
+                            {% if field.field.required %}
+                                <span class="required-indicator">*</span>
+                            {% endif %}
+                        </label>
+                        
+                        {% if field.name == 'description' %}
+                            <textarea id="{{ field.id_for_label }}" 
+                                      name="{{ field.name }}" 
+                                      class="form-input form-textarea"
+                                      rows="4"
+                                      placeholder="Description détaillée du capteur...">{{ field.value|default:'' }}</textarea>
+                        {% else %}
+                            {% if field.field.widget.input_type == 'select' %}
+                                <select id="{{ field.id_for_label }}" 
+                                        name="{{ field.name }}" 
+                                        class="form-select"
+                                        {% if field.field.required %}required{% endif %}>
+                                    {{ field.as_widget }}
+                                </select>
+                            {% else %}
+                                <input type="{{ field.field.widget.input_type|default:'text' }}" 
+                                       id="{{ field.id_for_label }}" 
+                                       name="{{ field.name }}" 
+                                       value="{{ field.value|default:'' }}"
+                                       class="form-input"
+                                       {% if field.field.required %}required{% endif %}
+                                       {% if field.help_text %}placeholder="{{ field.help_text }}"{% endif %}>
+                            {% endif %}
+                        {% endif %}
+                        
+                        {% if field.errors %}
+                            <div class="field-errors">
+                                {% for error in field.errors %}
+                                    <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        {% if field.help_text %}
+                            <small class="field-help">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-text">Enregistrer les modifications</span>
+                    </button>
+                    <a href="{% url 'index' %}" class="btn btn-secondary">
+                        <span class="btn-text">Annuler</span>
+                    </a>
+                </div>
+            </form>
+        </section>
 
-    <input type="submit" value="Enregistrer">
-</form>
+        <section class="navigation-section">
+            <h2 class="section-title">Navigation</h2>
+            <div class="nav-grid">
+                <a href="{% url 'index' %}" class="btn btn-secondary">
+                    <span class="btn-text">Tableau de bord</span>
+                </a>
+                <a href="{% url 'liste_capteurs' %}" class="btn btn-secondary">
+                    <span class="btn-text">Liste des capteurs</span>
+                </a>
+                <a href="{% url 'graphique' %}" class="btn btn-secondary">
+                    <span class="btn-text">Graphiques</span>
+                </a>
+            </div>
+        </section>
+    </div>
 
-<p><a href="{% url 'index' %}">Retour à l'accueil</a></p>
-
-</body>
-</html>
