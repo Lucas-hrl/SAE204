@@ -71,63 +71,82 @@ def export_csv(request):
 
 
 def graphique(request):
-    mesures = Mesure.objects.all().order_by('date_heure')
-
+    mesures = Mesure.objects.select_related('id_capteur').all().order_by('date_heure')
+    
     if not mesures.exists():
         return render(request, 'graphique.html', {
-            'graph': "<p>Aucune mesure enregistrée dans la base de données.</p>"
+            'graph': "<div class='alert alert-info text-center p-4'><h5>Aucune données disponibles</h5><p>Aucune mesure enregistrée.</p></div>"
         })
-
-    # Regrouper les mesures par capteur
-    groupes = defaultdict(lambda: {'dates': [], 'temperatures': []})
-
+    
+    # Regroupement des données par capteur
+    data_capteurs = defaultdict(lambda: {'dates': [], 'temperatures': [], 'nom': ''})
+    
     for mesure in mesures:
-        if not mesure.id_capteur:
-            continue
-        capteur_nom = mesure.id_capteur.nom_capteur
-        groupes[capteur_nom]['dates'].append(localtime(mesure.date_heure))
-        groupes[capteur_nom]['temperatures'].append(float(mesure.temperature))
-
+        if mesure.id_capteur and mesure.temperature is not None:
+            capteur_id = mesure.id_capteur.id_capteur
+            capteur_nom = mesure.id_capteur.nom_capteur
+            
+            data_capteurs[capteur_id]['dates'].append(localtime(mesure.date_heure))
+            data_capteurs[capteur_id]['temperatures'].append(float(mesure.temperature))
+            data_capteurs[capteur_id]['nom'] = capteur_nom
+    
     # Création du graphique
     fig = go.Figure()
-
-    for capteur, data in groupes.items():
+    
+    couleurs = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c', '#34495e', '#e67e22']
+    
+    for i, (capteur_id, data) in enumerate(data_capteurs.items()):
+        couleur = couleurs[i % len(couleurs)]
+        
         fig.add_trace(go.Scatter(
             x=data['dates'],
             y=data['temperatures'],
             mode='lines+markers',
-            name=capteur
+            name=data['nom'],
+            line=dict(width=3, color=couleur),
+            marker=dict(size=6, color=couleur),
+            hovertemplate='<b>%{fullData.name}</b><br>Température: %{y:.1f}°C<br>%{x}<extra></extra>'
         ))
-
+    
+    # Configuration du layout
     fig.update_layout(
         title={
-            'text': "Toutes les mesures de température par capteur",
+            'text': 'Évolution des Températures par Capteur',
             'x': 0.5,
-            'xanchor': 'center'
+            'xanchor': 'center',
+            'font': {'size': 20, 'color': '#2c3e50'}
         },
-        xaxis_title='Date',
-        yaxis_title='Température (°C)',
-        xaxis=dict(
-            showgrid=True,
-            tickformat='%d %b %H:%M',
-            tickangle=45
-        ),
-        yaxis=dict(
-            showgrid=True,
-            rangemode='tozero'
-        ),
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ),
+        xaxis={
+            'title': 'Date et Heure',
+            'showgrid': True,
+            'gridcolor': 'lightgray',
+            'tickformat': '%d/%m %H:%M'
+        },
+        yaxis={
+            'title': 'Température (°C)',
+            'showgrid': True,
+            'gridcolor': 'lightgray'
+        },
+        legend={
+            'orientation': 'h',
+            'yanchor': 'bottom',
+            'y': 1.02,
+            'xanchor': 'right',
+            'x': 1
+        },
         height=600,
-        template='plotly_white'
+        plot_bgcolor='rgba(240,240,240,0.5)',
+        paper_bgcolor='white',
+        hovermode='x unified'
     )
-
-    fig.update_traces(marker=dict(size=6))
-
-    fig_html = fig.to_html(full_html=False)
+    
+    # Export HTML
+    fig_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
+    
     return render(request, 'graphique.html', {'graph': fig_html})
+
+
+def liste_capteurs(request):
+    capteurs = Capteur.objects.all()
+    return render(request, 'capteurs.html', {'capteurs': capteurs})
+
